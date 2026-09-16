@@ -58,3 +58,10 @@ curl -s -X POST http://localhost:8080/api/todos \
 4. **Tests:** the deprecated `@MockBean` became `@MockitoBean`; no assertions changed, and all 9 tests still pass.
 
 The package is still named `com.example.legacy` so the before/after diff stays easy to follow.
+
+### Migration gotcha worth studying
+
+Spring MVC 5 treated a trailing slash as an optional path separator; Spring MVC 6 does not, so `GET /api/todos/`
+started returning 404 after the upgrade even though no controller code changed. `WebConfig` restores the old
+contract with a `UrlHandlerFilter`, and `TodoControllerTest` now covers both route shapes. This is the classic
+shape of a migration regression: behavior changes via a framework default, not via the diff.
