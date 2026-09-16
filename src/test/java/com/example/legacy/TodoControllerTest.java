@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TodoController.class)
+@Import(WebConfig.class)
 public class TodoControllerTest {
 
     @Autowired
@@ -101,6 +103,24 @@ public class TodoControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("updated"))
                 .andExpect(jsonPath("$.completed").value(true));
+    }
+
+    @Test
+    public void trailingSlashMatchesCollectionRoute() throws Exception {
+        given(service.findAll()).willReturn(Arrays.asList(todo(1L, "write code", false)));
+
+        mockMvc.perform(get("/api/todos/"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1));
+    }
+
+    @Test
+    public void trailingSlashMatchesItemRoute() throws Exception {
+        given(service.findById(1L)).willReturn(todo(1L, "write code", false));
+
+        mockMvc.perform(get("/api/todos/1/"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1));
     }
 
     @Test
