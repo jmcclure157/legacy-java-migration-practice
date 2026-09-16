@@ -94,6 +94,14 @@ public class TodoControllerTest {
     }
 
     @Test
+    public void createRejectsWhitespaceOnlyTitle() throws Exception {
+        mockMvc.perform(post("/api/todos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"   \",\"completed\":false}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void updateReturnsUpdatedTodo() throws Exception {
         given(service.update(eq(1L), any(Todo.class))).willReturn(todo(1L, "updated", true));
 
