@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -30,7 +30,7 @@ public class TodoController {
         if (completed == null) {
             return service.findAll();
         }
-        return service.findByCompleted(completed.booleanValue());
+        return service.findByCompleted(completed);
     }
 
     @GetMapping("/{id}")
@@ -40,7 +40,7 @@ public class TodoController {
 
     @PostMapping
     public ResponseEntity<Todo> create(@Valid @RequestBody Todo todo) {
-        return new ResponseEntity<Todo>(service.create(todo), HttpStatus.CREATED);
+        return new ResponseEntity<>(service.create(todo), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
