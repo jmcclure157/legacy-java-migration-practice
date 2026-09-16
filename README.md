@@ -53,7 +53,9 @@ gap. See the gotcha below.
 | PUT | `/api/todos/{id}` | Replace title/completed |
 | DELETE | `/api/todos/{id}` | Delete a todo (204) |
 
-A title is required and must be 1–255 characters; anything else is rejected with a 400.
+A title is required and must be 1–255 characters, or the request is rejected with a 400. The
+check runs on the raw value, so a whitespace-only title slips through and is stored empty after
+the service trims it — `@Size` would have to become `@NotBlank` to close that.
 
 ## The migration, step by step
 
