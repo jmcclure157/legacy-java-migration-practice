@@ -56,6 +56,26 @@ public class TodoControllerTest {
     }
 
     @Test
+    public void listFiltersByTitle() throws Exception {
+        given(service.findByTitle("milk")).willReturn(Arrays.asList(todo(1L, "buy milk", false)));
+
+        mockMvc.perform(get("/api/todos").param("title", "milk"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].title").value("buy milk"));
+    }
+
+    @Test
+    public void listFiltersByCompleted() throws Exception {
+        given(service.findByCompleted(true)).willReturn(Arrays.asList(todo(2L, "ship it", true)));
+
+        mockMvc.perform(get("/api/todos").param("completed", "true"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].id").value(2));
+    }
+
+    @Test
     public void getReturnsSingleTodo() throws Exception {
         given(service.findById(1L)).willReturn(todo(1L, "write code", false));
 

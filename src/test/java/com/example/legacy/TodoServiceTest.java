@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -35,5 +36,16 @@ public class TodoServiceTest {
 
         service.delete(created.getId());
         assertThrows(TodoNotFoundException.class, () -> service.findById(created.getId()));
+    }
+
+    @Test
+    public void findByTitleMatchesPartialAndIgnoresCase() {
+        Todo created = service.create(new Todo("Buy Oranges", false));
+
+        List<Todo> matches = service.findByTitle("orange");
+        assertTrue(matches.stream().anyMatch(t -> t.getId().equals(created.getId())));
+
+        assertFalse(service.findByTitle("bananas").stream()
+                .anyMatch(t -> t.getId().equals(created.getId())));
     }
 }

@@ -47,7 +47,7 @@ gap. See the gotcha below.
 
 | Method | Path | Description |
 | --- | --- | --- |
-| GET | `/api/todos` | List todos (optional `?completed=true` / `?completed=false`) |
+| GET | `/api/todos` | List todos (optional `?completed=true` / `?completed=false`, or `?title=milk` to search) |
 | GET | `/api/todos/{id}` | Fetch one todo (404 when missing) |
 | POST | `/api/todos` | Create a todo (201) |
 | PUT | `/api/todos/{id}` | Replace title/completed |
@@ -55,6 +55,11 @@ gap. See the gotcha below.
 
 A title is required, must contain at least one non-whitespace character, and can be at most 255
 characters; anything else is rejected with a 400.
+
+Title search matches anywhere in the title and ignores case, so `?title=milk` finds
+`Buy Milk Tomorrow`. If both `title` and `completed` are supplied, `title` wins and `completed`
+is ignored — combining them would need a second repository query, which this practice app
+skips deliberately.
 
 ## The migration, step by step
 
