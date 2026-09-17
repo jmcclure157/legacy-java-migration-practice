@@ -26,7 +26,12 @@ public class TodoController {
     }
 
     @GetMapping
-    public List<Todo> list(@RequestParam(value = "completed", required = false) Boolean completed) {
+    public List<Todo> list(
+            @RequestParam(value = "completed", required = false) Boolean completed,
+            @RequestParam(value = "title", required = false) String title) {
+        if (title != null) {
+            return service.findByTitle(title);
+        }
         if (completed == null) {
             return service.findAll();
         }

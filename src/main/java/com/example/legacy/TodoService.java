@@ -26,6 +26,11 @@ public class TodoService {
     }
 
     @Transactional(readOnly = true)
+    public List<Todo> findByTitle(String text) {
+        return repository.findByTitleContainingIgnoreCase(text);
+    }
+
+    @Transactional(readOnly = true)
     public Todo findById(Long id) {
         Todo todo = repository.findById(id).orElse(null);
         if (todo == null) {

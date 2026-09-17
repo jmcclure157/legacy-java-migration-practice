@@ -9,4 +9,6 @@ import java.util.List;
 public interface TodoRepository extends JpaRepository<Todo, Long> {
 
     List<Todo> findByCompleted(boolean completed);
+
+    List<Todo> findByTitleContainingIgnoreCase(String text);
 }
